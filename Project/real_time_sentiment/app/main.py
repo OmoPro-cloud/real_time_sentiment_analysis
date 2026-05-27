@@ -1,10 +1,22 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException, Request
 from app.schemas import TextRequest
 from app.model import predict_sentiment
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+
+from dotenv import load_dotenv
 
 import logging
 import pandas as pd
 import os
+import time
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
 
 logging.basicConfig(
     filename="logs/predictions.log",
@@ -12,7 +24,16 @@ logging.basicConfig(
     format="%(asctime)s - %(message)s"
 )
 
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI()
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, lambda r, e: HTTPException(
+    status_code=429,
+    detail="Rate limit exceeded"
+))
+app.add_middleware(SlowAPIMiddleware)
 
 CSV_FILE = "monitoring/predictions.csv"
 
@@ -21,24 +42,40 @@ def home():
     return {"message": "API is running"}
 
 @app.post("/predict")
-def predict(request: TextRequest):
+@limiter.limit("5/minute")
+def predict(
+    request: Request,
+    body: TextRequest,
+    x_api_key: str = Header(None)
+):
 
-    result = predict_sentiment(request.text)
+    start_time = time.time()
+
+    if x_api_key != API_KEY:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid API Key"
+        )
+
+    result = predict_sentiment(body.text)
 
     label = result[0]["label"]
     score = result[0]["score"]
 
+    response_time = round(time.time() - start_time, 4)
+
     log_message = (
-        f'TEXT="{request.text}" | '
+        f'TEXT="{body.text}" | '
         f'PREDICTION="{label}" | '
-        f'SCORE={score}'
+        f'SCORE={score} | '
+        f'RESPONSE_TIME={response_time}s'
     )
 
     logging.info(log_message)
 
     new_data = pd.DataFrame([
         {
-            "text": request.text,
+            "text": body.text,
             "label": label,
             "score": score
         }
@@ -52,4 +89,7 @@ def predict(request: TextRequest):
             index=False
         )
 
-    return result
+    return {
+        "prediction": result,
+        "response_time": response_time
+    }
