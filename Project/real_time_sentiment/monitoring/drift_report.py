@@ -3,7 +3,7 @@ import pandas as pd
 from evidently.report import Report
 from evidently.metric_preset import DataDriftPreset
 
-current_data = pd.read_csv("monitoring/predictions.csv")
+current_data = pd.read_csv("Project/real_time_sentiment/monitoring/predictions.csv")
 
 reference_data = current_data.copy()
 
@@ -16,6 +16,6 @@ report.run(
     current_data=current_data
 )
 
-report.save_html("monitoring/drift_report.html")
+report.save_html("Project/real_time_sentiment/monitoring/drift_report.html")
 
-print("Drift report generated!")
+print("Report generated!")
