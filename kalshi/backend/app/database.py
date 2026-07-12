@@ -17,6 +17,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+print(f"Database URL: {DATABASE_URL}")
 
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL not found in .env file")
