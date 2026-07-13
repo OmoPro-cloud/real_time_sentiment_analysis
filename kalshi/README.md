@@ -40,8 +40,8 @@ and recommends the highest expected-value betting opportunities.
 
 - [x] Create FastAPI backend
 - [x] Create Next.js frontend
-- [ ] Connect PostgreSQL
-- [ ] Create database models
+- [x] Connect PostgreSQL
+- [x] Create database models
 - [ ] Build data ingestion pipeline
 - [ ] Implement Elo ratings
 - [ ] Build Poisson goal model
