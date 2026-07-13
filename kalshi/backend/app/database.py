@@ -17,7 +17,6 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-print(f"Database URL: {DATABASE_URL}")
 
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL not found in .env file")
@@ -31,3 +30,13 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal() #opens database session
+
+    try:
+        yield db #uses/accesses it
+
+    finally:
+        db.close() #closes database session
+                    #this means we never leave our database connections open

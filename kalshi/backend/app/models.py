@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy import Column, Float, Integer, String, Boolean, DateTime
+from datetime import datetime
 
 from app.database import Base #every table in the database will inherit from Base
 
@@ -10,3 +11,6 @@ class Team(Base):
     fifa_rank = Column(Integer)
     elo_rating = Column(Float)
     confederation = Column(String)
+    #country = Column(String, nullable=False)
+    #is_active = Column(Boolean, default=True)
+    #created_at = Column(DateTime, default=datetime.utcnow)
