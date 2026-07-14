@@ -1,40 +1,16 @@
-from fastapi import Depends, FastAPI
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
-from app.database import Base, engine, get_db
-from app import models, schemas
-
-#Create all database tables
-#Base.metadata.create_all(bind=engine)
+from app.database import Base, engine
+from app.models import NationalTeam
+from app.routers import national_team
 
 app = FastAPI()
 
+app.include_router(national_team.router)
+
 @app.get("/")
 def home():
-    return{"message": "Welcome to the Kalshi Ai Dashboard!"}
-
-@app.post("/teams", response_model=schemas.TeamResponse)
-def create_team(
-    team: schemas.TeamCreate,
-    db: Session = Depends(get_db),
-):
-    db_team = models.Team(
-        name=team.name,
-        fifa_code=team.fifa_code,
-        fifa_rank=team.fifa_rank,
-        elo_rating=team.elo_rating,
-        confederation=team.confederation,
-        team_type=team.team_type,
-    )
-    db.add(db_team)
-    db.commit()
-    db.refresh(db_team)
-    return db_team
-
-@app.get("/teams", response_model=list[schemas.TeamResponse])
-def get_teams(db: Session = Depends(get_db)):
-    teams = db.query(models.Team).all()
-    return teams
+    return {"message": "Welcome to the Kalshi AI Dashboard!"}
 
 @app.get("/matches")
 def matches():
