@@ -1,20 +1,31 @@
 from pydantic import BaseModel
 
 
-class TeamCreate(BaseModel): #this basically says: "this is what I need from the user"
+class NationalTeamCreate(BaseModel):
     name: str
     fifa_code: str
-    fifa_rank: int
-    elo_rating: float
     confederation: str
+    association_name: str
 
-class TeamResponse(BaseModel): #this is what the API returns
+    nickname: str | None = None
+    home_stadium: str | None = None
+    headquarters_city: str | None = None
+    founded_year: int | None = None
+
+class NationalTeamResponse(BaseModel):
     id: int
+
     name: str
     fifa_code: str
-    fifa_rank: int
-    elo_rating: float
+
+    country: str
     confederation: str
+    association_name: str
+
+    nickname: str | None = None
+    home_stadium: str | None = None
+    headquarters_city: str | None = None
+    founded_year: int | None = None
 
     class Config:
         from_attributes = True

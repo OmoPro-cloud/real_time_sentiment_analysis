@@ -5,7 +5,7 @@ from app.database import Base, engine, get_db
 from app import models, schemas
 
 #Create all database tables
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -24,6 +24,7 @@ def create_team(
         fifa_rank=team.fifa_rank,
         elo_rating=team.elo_rating,
         confederation=team.confederation,
+        team_type=team.team_type,
     )
     db.add(db_team)
     db.commit()
