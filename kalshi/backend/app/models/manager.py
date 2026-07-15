@@ -12,7 +12,7 @@ from app.database import Base
 class Manager(Base):
     __tablename__ = "managers"
 
-    id = Column(String, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
 
     full_name = Column(String, nullable=False)
 
@@ -29,6 +29,8 @@ class Manager(Base):
     coaching_since = Column(Integer)
 
     date_of_birth = Column(String)
+
+    is_active = Column(Boolean, default=True)
 
     created_at = Column(
         DateTime(timezone=True),
