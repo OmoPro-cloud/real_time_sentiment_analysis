@@ -2,12 +2,15 @@ from sqlalchemy import (
     Boolean,
     Column,
     DateTime,
+    BigInteger,
     Integer,
     String,
 )
 from sqlalchemy import func
-
 from app.database import Base
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 class Manager(Base):
     __tablename__ = "managers"
@@ -18,7 +21,16 @@ class Manager(Base):
 
     nationality = Column(String, nullable=False)
 
-    current_team = Column(String)
+    club_id = Column(
+        Integer,
+        ForeignKey("clubs.id"),
+        nullable=True,
+    )
+
+    club = relationship(
+        "Club",
+        back_populates="managers",
+    )
 
     preferred_formation = Column(String)
 
@@ -31,6 +43,16 @@ class Manager(Base):
     date_of_birth = Column(String)
 
     is_active = Column(Boolean, default=True)
+
+    preferred_foot = Column(String)
+
+    contract_until = Column(String)
+
+    annual_salary = Column(BigInteger)
+
+    agent = Column(String)
+
+    playing_position = Column(String)
 
     created_at = Column(
         DateTime(timezone=True),

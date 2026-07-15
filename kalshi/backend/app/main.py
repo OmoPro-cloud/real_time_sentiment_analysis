@@ -1,15 +1,26 @@
 from fastapi import FastAPI
 
 from app.database import Base, engine
-from app.models import NationalTeam, Manager
-from app.routers import national_team, manager
+from app.models import(
+    NationalTeam,
+    Manager,
+    Club,
+    Tournament,
+)
 
-Base.metadata.create_all(bind=engine)
+from app.routers import (
+    national_team,
+    manager,
+    club,
+    tournament,
+)
 
 app = FastAPI()
 
 app.include_router(national_team.router)
 app.include_router(manager.router)
+app.include_router(club.router)
+app.include_router(tournament.router)
 
 @app.get("/")
 def home():
