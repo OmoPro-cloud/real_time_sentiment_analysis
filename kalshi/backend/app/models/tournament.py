@@ -38,6 +38,11 @@ class Tournament(Base):
         back_populates="tournament",
     )
 
+    competition_seasons = relationship(
+        "CompetitionSeason",
+        back_populates="tournament",
+    )
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),

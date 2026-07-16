@@ -55,6 +55,11 @@ class Club(Base):
         back_populates="club",
     )
 
+    players = relationship(
+        "Player",
+        back_populates="club",
+    )
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),

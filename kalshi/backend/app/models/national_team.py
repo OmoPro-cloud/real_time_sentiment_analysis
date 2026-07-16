@@ -3,6 +3,8 @@ from sqlalchemy.sql import func
 
 from app.database import Base
 
+from sqlalchemy.orm import relationship
+
 
 class NationalTeam(Base):
     __tablename__ = "national_teams"
@@ -22,6 +24,11 @@ class NationalTeam(Base):
     founded_year = Column(Integer, nullable=True)
 
     is_active = Column(Boolean, default=True)
+
+    players = relationship(
+        "Player",
+        back_populates="national_team",
+    )
 
     created_at = Column(
         DateTime(timezone=True),

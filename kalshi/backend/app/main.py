@@ -6,12 +6,16 @@ from app.models import(
     Manager,
     Club,
     Tournament,
+    Player,
 )
 
 from app.routers import (
     national_team,
     manager,
     club,
+    competition_season,
+    player,
+    season,
     tournament,
 )
 
@@ -21,6 +25,9 @@ app.include_router(national_team.router)
 app.include_router(manager.router)
 app.include_router(club.router)
 app.include_router(tournament.router)
+app.include_router(player.router)
+app.include_router(season.router)
+app.include_router(competition_season.router)
 
 @app.get("/")
 def home():
